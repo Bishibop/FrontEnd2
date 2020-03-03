@@ -1,26 +1,31 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
+import Login from './components/Login';
+import Signup from './components/Signup';
+// import NavBar from './components/nav-bar/nav-bar';
+
+import './App.css';
+import PrivateRouteWithProps from './authentication/PrivateRouteWithProps';
 
 function App() {
-  return (
-    <div className="App">
+	return (
+		<div className='App'>
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>School in the Cloud</h1>
       </header>
-    </div>
-  );
+      <Route path='/signup' component={Signup} />
+      <Route path='/login' component={Login} />
+		{/*
+			<Route path='/' component={NavBar} />
+			<Switch>
+				
+				<PrivateRouteWithProps exact path='/admin' component={admin} />
+				
+			</Switch>
+		*/}
+		</div>
+	);
 }
 
 export default App;
