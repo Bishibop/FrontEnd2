@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 
 import {authenticateUser} from '../actions/auth'
 function Login(props) {
-  
+
 
   const [emailAndPassword, setEmailAndPassword] = useState({
     email: '',
