@@ -7,6 +7,7 @@ import Homepage from "./components/Homepage";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import Volunteer from "./components/Volunteer";
 
 
 
@@ -20,6 +21,7 @@ const App = () => (
         
         <Route path="/login" component={Login} />
         <Route path="/Register" component={Signup} />
+        <Route path="/volunteer/:id" component={Volunteer} />
         
         {/* <PrivateRoute path="/admin" component={<Admin/>} /> */}
         
