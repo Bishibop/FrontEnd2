@@ -1,35 +1,43 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'
-
-
 import { connect } from "react-redux";
+import * as yup from 'yup';
 
 import {authenticateUser} from '../actions/auth'
+import ErrorMessage from './ErrorMessage';
+
+const loginValidationSchema = yup.object().shape({
+  email: yup.string()
+    .email('Please enter a valid email')
+    .required('Please enter an email'),
+  password: yup.string()
+    .required('Please enter a password')
+});
+
 function Login(props) {
-  
 
   const [emailAndPassword, setEmailAndPassword] = useState({
     email: '',
     password: ''
   });
-  
-  
+  const [formErrors, setFormErrors] = useState();  
+
   function handleChange(event) {
-    console.log('Change value: ', event.target.value);
+    //console.log('Change value: ', event.target.value);
     setEmailAndPassword({ ...emailAndPassword, [event.target.name]: event.target.value });
   }
 
   function handleSubmit(event) {
     console.log('Email and password: ', emailAndPassword);
-    event.preventDefault();
-    props.authenticateUser(emailAndPassword)
-    console.log(emailAndPassword)
 
-
-    setEmailAndPassword({
-      email: '',
-      password: ''
+    loginValidationSchema.validate(emailAndPassword, {abortEarly: false})
+      .then(() => {
+        props.authenticateUser(emailAndPassword);
+    }).catch(err => {
+      setFormErrors(err.errors);
+      //console.log('yup errors: ', err);
     });
+
     event.preventDefault();
   }
 
@@ -37,6 +45,9 @@ function Login(props) {
   return (
     <div className="login">
       <h2>Login Page</h2>
+      {formErrors && formErrors.map(err => (
+        <ErrorMessage key={err} message={err}/>
+      ))}
       <form onSubmit={handleSubmit}>
         <div>
           <label>
@@ -45,7 +56,6 @@ function Login(props) {
               type='text'
               name='email'
               value={emailAndPassword.email}
-              placeholder='johndoe@gmail.com'
               onChange={handleChange}
             />
           </label>
