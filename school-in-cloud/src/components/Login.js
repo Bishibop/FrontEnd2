@@ -12,7 +12,8 @@ function Login(props) {
     email: '',
     password: ''
   });
-
+  
+  
   function handleChange(event) {
     console.log('Change value: ', event.target.value);
     setEmailAndPassword({ ...emailAndPassword, [event.target.name]: event.target.value });

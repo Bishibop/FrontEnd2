@@ -18,7 +18,7 @@ const App = () => (
          <Route exact path="/" component={Login} />  
          
         
-        <Route path="/" component={Login} />
+        <Route path="/login" component={Login} />
         <Route path="/Register" component={Signup} />
         
         {/* <PrivateRoute path="/admin" component={<Admin/>} /> */}
