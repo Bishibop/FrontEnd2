@@ -61,7 +61,7 @@ function Login(props) {
           </label>
         </div>
         <button>Login</button>
-        <Link to="/signup">
+        <Link to="/Register">
                 {"Don't have an account? Register"}
         </Link>
       </form>

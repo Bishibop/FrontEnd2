@@ -15,10 +15,11 @@ const App = () => (
   <div className="app">
 
       <Switch>
-        <Route exact path="/" component={Homepage} /> 
+         <Route exact path="/" component={Login} />  
          
-        <Route path="/Register" component={Signup} /> 
-        <Route path="/login" component={Login} />
+        
+        <Route path="/" component={Login} />
+        <Route path="/Register" component={Signup} />
         
         {/* <PrivateRoute path="/admin" component={<Admin/>} /> */}
         
