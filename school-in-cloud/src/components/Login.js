@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'
 
-function Login() {
+
+import { connect } from "react-redux";
+
+import {authenticateUser} from '../actions/auth'
+function Login(props) {
+  
+
   const [emailAndPassword, setEmailAndPassword] = useState({
     email: '',
     password: ''
@@ -13,13 +20,18 @@ function Login() {
 
   function handleSubmit(event) {
     console.log('Email and password: ', emailAndPassword);
-    // Do the thing you want to do with the combo
+    event.preventDefault();
+    props.authenticateUser(emailAndPassword)
+    console.log(emailAndPassword)
+
+
     setEmailAndPassword({
       email: '',
       password: ''
     });
     event.preventDefault();
   }
+
 
   return (
     <div className="login">
@@ -49,10 +61,25 @@ function Login() {
           </label>
         </div>
         <button>Login</button>
+        <Link to="/signup">
+                {"Don't have an account? Register"}
+        </Link>
       </form>
     </div>
   );
 }
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+  };
+}
 
-export default Login;
+const mapDispatchToProps = {
+  authenticateUser
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);
+
 

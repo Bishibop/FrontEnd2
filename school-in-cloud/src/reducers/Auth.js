@@ -1,63 +1,60 @@
-import { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAILURE, SIGNUP_START, SIGNUP_SUCCESS, 
-	SIGNUP_FAILURE } from '../actions';
+import * as actions from "../actions";
 
-const initialState = {
-	mapData      : [],
-	loggingIn    : false,
-	error        : null,
-	loading      : true,
-	token        : localStorage.getItem('token'),
-	fetchingData : false,
+import {LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE} from '../actions/auth'
+
+const initalState = {
+  errorMessage: "",
+  token: "",
+  user: null,
 };
 
-export const reducer = (state = initialState, action) => {
-	switch (action.type) {
-		case LOGIN_START:
-			console.log('Store', state);
-			console.log('Action', action);
-			return {
-				...state,
-				loggingIn : true,
-				error     : false,
-			};
-		case LOGIN_SUCCESS:
-			return {
-				...state,
-				loggingIn : false,
-				error     : false,
-				token     : localStorage.getItem('token'),
-			};
-		case LOGIN_FAILURE:
-			return {
-				...state,
-				loggingIn : false,
-				error     : action.payload,
-			};
-		case SIGNUP_START:
-            console.log('Store', state);
-			console.log('Action', action);
-			return {
-				...state,
-				loggingIn : true,
-				error     : false,
-			};
-		case SIGNUP_SUCCESS:
-			return {
-				...state,
-				loggingIn : false,
-				error     : false,
-				token     : localStorage.getItem('token'),
-			};
-		case SIGNUP_FAILURE:
-			return {
-				...state,
-				loggingIn : false,
-				error     : action.payload,
-			};
+export const authReducer = (state = initalState, action) => {
 
-		default:
-			return state;
-	}
+  switch (action.type) {
+    case LOGIN_REQUEST:
+      return {
+        ...state,
+        errorMessage: ""
+      };
+
+    case LOGIN_SUCCESS:
+      return {
+        ...state,
+        user: action.payload
+      };
+
+    case LOGIN_FAILURE:
+      return {
+        ...state,
+        errorMessage: action.payload
+      };
+
+    case actions.REGISTER_REQUEST:
+      return {
+        ...state,
+        errorMessage: ""
+      };
+
+    case actions.REGISTER_SUCCESS:
+      return {
+        ...state,
+        user: action.payload,
+        errorMessage: action.payload
+      };
+
+    case actions.REGISTER_FAILURE:
+      return {
+        ...state,
+        errorMessage: action.errorMessage
+      };
+
+      case action.LOGOUT_USER:
+        return{
+          ...state,
+          user:action.payload
+        }
+
+    default:
+      return state;
+  }
 };
-
-export default reducer;

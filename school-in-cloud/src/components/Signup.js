@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { CountryDropdown  } from 'react-country-region-selector';
+import { connect } from "react-redux";
 
-function Signup() {
+import { registerUser } from '../actions/auth'
+function Signup(props) {
   const [user, setUser] = useState({
     firstName: '',
     lastName: '',
@@ -9,14 +11,14 @@ function Signup() {
     password: '',
     role: '',
     country: '',
-    availability: {
-      '3': false,
-      '4': false,
-      '5': false,
-      '6': false,
-      '7': false,
-      '8': false
-    } 
+    // availability: {
+    //   '3': false,
+    //   '4': false,
+    //   '5': false,
+    //   '6': false,
+    //   '7': false,
+    //   '8': false
+    // } 
   });
 
   function handleChange(event) {
@@ -30,12 +32,12 @@ function Signup() {
     setUser(updatedUser);
     console.log('Change value: ', event.target.value, user.availability);
   }
-
-  function handleSubmit(event) {
-    console.log('User: ', user);
-    // Do the thing you want to do with the combo
+  const handleSubmit = event => {
     event.preventDefault();
-  }
+    props.registerUser(user)
+    console.log(user)
+  };
+  
 
   return (
     <div className="signup">
@@ -115,7 +117,7 @@ function Signup() {
                 />
               </label>
             </div>
-            <div>
+            {/* <div>
               <label>
                 Availability (select all that apply):
                 <br/>
@@ -132,7 +134,7 @@ function Signup() {
                   </React.Fragment>
                   )}
               </label>
-            </div>
+            </div> */}
           </>
         }
         <button>Signup</button>
@@ -141,4 +143,17 @@ function Signup() {
   );
 }
 
-export default Signup;
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+  };
+}
+
+const mapDispatchToProps = {
+  registerUser
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Signup);
