@@ -11,14 +11,14 @@ function Signup(props) {
     password: '',
     role: '',
     country: '',
-    // availability: {
-    //   '3': false,
-    //   '4': false,
-    //   '5': false,
-    //   '6': false,
-    //   '7': false,
-    //   '8': false
-    // } 
+    formAvailability: {
+      '3': false,
+      '4': false,
+      '5': false,
+      '6': false,
+      '7': false,
+      '8': false
+    },
   });
 
   function handleChange(event) {
@@ -28,14 +28,19 @@ function Signup(props) {
 
   function availabilityChange(event) {
     let updatedUser = user;
-    updatedUser.availability[event.target.value] = !user.availability[event.target.value]
+    updatedUser.formAvailability[event.target.value] = !user.formAvailability[event.target.value]
     setUser(updatedUser);
-    console.log('Change value: ', event.target.value, user.availability);
+    console.log('Change value: ', event.target.value, user.formAvailability);
   }
+
   const handleSubmit = event => {
     event.preventDefault();
-    props.registerUser(user)
-    console.log(user)
+    let updatedUser = user;
+    updatedUser.availability = Object.keys(user.formAvailability)
+      .filter(key => user.formAvailability[key])
+      .join(',');
+    props.registerUser(updatedUser);
+    console.log(updatedUser);
   };
   
 
@@ -117,15 +122,15 @@ function Signup(props) {
                 />
               </label>
             </div>
-            {/* <div>
+            <div>
               <label>
                 Availability (select all that apply):
                 <br/>
-                {Object.keys(user.availability).map(timeslot => 
+                {Object.keys(user.formAvailability).map(timeslot => 
                   <React.Fragment key={timeslot} >
                     <input
                       type='checkbox'
-                      name='availability'
+                      name='formAvailability'
                       onChange={availabilityChange}
                       value={timeslot}
                     />
@@ -134,7 +139,7 @@ function Signup(props) {
                   </React.Fragment>
                   )}
               </label>
-            </div> */}
+            </div>
           </>
         }
         <button>Signup</button>
