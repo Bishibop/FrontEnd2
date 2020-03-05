@@ -1,25 +1,56 @@
 import React, { useState } from 'react';
 import { CountryDropdown  } from 'react-country-region-selector';
 import { connect } from "react-redux";
+import * as yup from 'yup';
 
 import { registerUser } from '../actions/auth'
+import ErrorMessage from './ErrorMessage';
+
+const signupValidationSchema = yup.object().shape({
+  firstName: yup.string()
+    .required('Please enter your first name'),
+  lastName: yup.string()
+    .required('Please enter your last name'),
+  email: yup.string()
+    .email('Please enter a valid email')
+    .required('Please enter an email'),
+  password: yup.string()
+    .required('Please enter a password'),
+  role: yup.string()
+    .required('Please select a role'),
+  country: yup.string()
+    .when("role", {
+      is: 'volunteer',
+      then: yup.string().required("Please select a country")
+    }),
+  // availability: yup.mixed()
+  //   .when("role", {
+  //     is: 'volunteer',
+  //     then: yup.mixed().test(
+  //       'has-availablity',
+  //       'Please select your availability',
+  //       (value) => Object.values(value).includes(true)
+  //   )})
+});
+
 function Signup(props) {
   const [user, setUser] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    role: ''
-    // country: 'USA',
-    // availability: {
-    //   '3': false,
-    //   '4': false,
-    //   '5': false,
-    //   '6': false,
-    //   '7': false,
-    //   '8': false
-    // } 
+    role: '',
+    country: '',
+    formAvailability: {
+      '3': false,
+      '4': false,
+      '5': false,
+      '6': false,
+      '7': false,
+      '8': false
+    },
   });
+  const [formErrors, setFormErrors] = useState();
 
   function handleChange(event) {
     console.log('Change value: ', event.target.value);
@@ -28,20 +59,35 @@ function Signup(props) {
 
   function availabilityChange(event) {
     let updatedUser = user;
-    updatedUser.availability[event.target.value] = !user.availability[event.target.value]
+    updatedUser.formAvailability[event.target.value] = !user.formAvailability[event.target.value]
     setUser(updatedUser);
-    console.log('Change value: ', event.target.value, user.availability);
+    console.log('Change value: ', event.target.value, user.formAvailability);
   }
+
   const handleSubmit = event => {
     event.preventDefault();
-    props.registerUser(user)
-    console.log(user)
+    signupValidationSchema.validate(user, {abortEarly: false})
+      .then(() => {
+        let updatedUser = user;
+        updatedUser.availability = Object.keys(user.formAvailability)
+          .filter(key => user.formAvailability[key])
+          .join(',');
+        props.registerUser(updatedUser);
+        console.log(updatedUser);
+      })
+      .catch(err => {
+        setFormErrors(err.errors);
+        console.log('yup thing: ', err);
+      });
   };
   
 
   return (
     <div className="signup">
       <h2>Signup page</h2>
+      {formErrors && formErrors.map(err => (
+        <ErrorMessage key={err} message={err}/>
+      ))}
       <form onSubmit={handleSubmit}>
         <div>
           <label>
@@ -50,7 +96,6 @@ function Signup(props) {
               type='text'
               name='firstName'
               value={user.firstName}
-              placeholder='John'
               onChange={handleChange}
             />
           </label>
@@ -62,7 +107,6 @@ function Signup(props) {
               type='text'
               name='lastName'
               value={user.lastName}
-              placeholder='Doe'
               onChange={handleChange}
             />
           </label>
@@ -74,7 +118,6 @@ function Signup(props) {
               type='text'
               name='email'
               value={user.email}
-              placeholder='johndoe@gmail.com'
               onChange={handleChange}
             />
           </label>
@@ -109,24 +152,23 @@ function Signup(props) {
             <div>
               <label>
                 Country:
-                
-                 <CountryDropdown
+                <CountryDropdown
                   value={user.country}
                   //valueType='short'
                   name='country'
                   onChange={(val) => setUser({ ...user, country:val })}
-                /> 
+                />
               </label>
             </div>
-            {/* <div>
+            <div>
               <label>
                 Availability (select all that apply):
                 <br/>
-                {Object.keys(user.availability).map(timeslot => 
+                {Object.keys(user.formAvailability).map(timeslot => 
                   <React.Fragment key={timeslot} >
                     <input
                       type='checkbox'
-                      name='availability'
+                      name='formAvailability'
                       onChange={availabilityChange}
                       value={timeslot}
                     />
@@ -135,7 +177,7 @@ function Signup(props) {
                   </React.Fragment>
                   )}
               </label>
-            </div> */}
+            </div>
           </>
         }
         <button>Signup</button>
