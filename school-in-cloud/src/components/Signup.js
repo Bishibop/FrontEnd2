@@ -9,8 +9,8 @@ function Signup(props) {
     lastName: '',
     email: '',
     password: '',
-    role: '',
-    country: '',
+    role: ''
+    // country: 'USA',
     // availability: {
     //   '3': false,
     //   '4': false,
@@ -109,12 +109,13 @@ function Signup(props) {
             <div>
               <label>
                 Country:
-                <CountryDropdown
+                
+                 <CountryDropdown
                   value={user.country}
                   //valueType='short'
                   name='country'
                   onChange={(val) => setUser({ ...user, country:val })}
-                />
+                /> 
               </label>
             </div>
             {/* <div>
