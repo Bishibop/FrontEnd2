@@ -6,9 +6,9 @@ import { hasToken } from "../utils/token";
 const api = API();
 
 function Volunteer(props) {
-  if (!hasToken) {
-    return <Redirect to="/Register" />;
-  }
+//   if (!hasToken) {
+//     return <Redirect to="/Register" />;
+//   }
   
   const [volunteer, setVolunteer] = useState({
     email: '',
