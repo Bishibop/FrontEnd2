@@ -1,8 +1,38 @@
 import React, { useState } from 'react';
 import { CountryDropdown  } from 'react-country-region-selector';
 import { connect } from "react-redux";
+import * as yup from 'yup';
 
 import { registerUser } from '../actions/auth'
+import ErrorMessage from './ErrorMessage';
+
+const signupValidationSchema = yup.object().shape({
+  firstName: yup.string()
+    .required('Please enter your first name'),
+  lastName: yup.string()
+    .required('Please enter your last name'),
+  email: yup.string()
+    .email('Please enter a valid email')
+    .required('Please enter an email'),
+  password: yup.string()
+    .required('Please enter a password'),
+  role: yup.string()
+    .required('Please select a role'),
+  country: yup.string()
+    .when("role", {
+      is: 'volunteer',
+      then: yup.string().required("Please select a country")
+    }),
+  // availability: yup.mixed()
+  //   .when("role", {
+  //     is: 'volunteer',
+  //     then: yup.mixed().test(
+  //       'has-availablity',
+  //       'Please select your availability',
+  //       (value) => Object.values(value).includes(true)
+  //   )})
+});
+
 function Signup(props) {
   const [user, setUser] = useState({
     firstName: '',
@@ -20,6 +50,7 @@ function Signup(props) {
       '8': false
     },
   });
+  const [formErrors, setFormErrors] = useState();
 
   function handleChange(event) {
     console.log('Change value: ', event.target.value);
@@ -35,18 +66,28 @@ function Signup(props) {
 
   const handleSubmit = event => {
     event.preventDefault();
-    let updatedUser = user;
-    updatedUser.availability = Object.keys(user.formAvailability)
-      .filter(key => user.formAvailability[key])
-      .join(',');
-    props.registerUser(updatedUser);
-    console.log(updatedUser);
+    signupValidationSchema.validate(user, {abortEarly: false})
+      .then(() => {
+        let updatedUser = user;
+        updatedUser.availability = Object.keys(user.formAvailability)
+          .filter(key => user.formAvailability[key])
+          .join(',');
+        props.registerUser(updatedUser);
+        console.log(updatedUser);
+      })
+      .catch(err => {
+        setFormErrors(err.errors);
+        console.log('yup thing: ', err);
+      });
   };
   
 
   return (
     <div className="signup">
       <h2>Signup page</h2>
+      {formErrors && formErrors.map(err => (
+        <ErrorMessage key={err} message={err}/>
+      ))}
       <form onSubmit={handleSubmit}>
         <div>
           <label>
@@ -55,7 +96,6 @@ function Signup(props) {
               type='text'
               name='firstName'
               value={user.firstName}
-              placeholder='John'
               onChange={handleChange}
             />
           </label>
@@ -67,7 +107,6 @@ function Signup(props) {
               type='text'
               name='lastName'
               value={user.lastName}
-              placeholder='Doe'
               onChange={handleChange}
             />
           </label>
@@ -79,7 +118,6 @@ function Signup(props) {
               type='text'
               name='email'
               value={user.email}
-              placeholder='johndoe@gmail.com'
               onChange={handleChange}
             />
           </label>
