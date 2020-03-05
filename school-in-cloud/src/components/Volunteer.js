@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API from '../utils/API'
+import { hasToken } from "../utils/token";
 
 const api = API();
 
 function Volunteer(props) {
+  if (!hasToken) {
+    return <Redirect to="/Register" />;
+  }
+  
   const [volunteer, setVolunteer] = useState({
     email: '',
     lastName: '',

@@ -2,8 +2,9 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 
 
-import Homepage from "./components/Homepage";
-
+import Admin from "./components/Admin";
+import Volunteer from "./components/Volunteer";
+import Student from "./components/Student";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
@@ -21,9 +22,10 @@ const App = () => (
         
         <Route path="/login" component={Login} />
         <Route path="/Register" component={Signup} />
-        <Route path="/volunteer/:id" component={Volunteer} />
+        <PrivateRoute exact path="/admin" component={Admin} />
+        <PrivateRoute exact path="/student" component={Student} />
+        <PrivateRoute exact path="/volunteer/:id" component={Volunteer}/>
         
-        {/* <PrivateRoute path="/admin" component={<Admin/>} /> */}
         
       </Switch>
   </div>

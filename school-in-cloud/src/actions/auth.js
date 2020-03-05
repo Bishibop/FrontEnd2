@@ -22,13 +22,23 @@ export function authenticateUser (userData , props) {
 
   API().post("https://school-in-cloud-api.herokuapp.com/api/auth/login", userData)
     .then(response => {
+      console.log("response")
+      console.log(response.data);
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem("userID", response.data.email)
-      localStorage.setItem("password", response.data.password);
-      localStorage.setItem("role", response.data.role);
+      
+         
       
       dispatch({type: LOGIN_SUCCESS, payload: response.data})
-      // dispatch(push("/dashboard"));
+      if (response.data.user.role ==="admin") {
+        dispatch(push("/admin"));
+        
+      }
+      else if (response.data.user.role ==="student") {
+        dispatch(push("/student"));
+      }
+      else {
+        dispatch(push("/volunteer"));
+      }
     })
     .catch(error =>
       dispatch({
@@ -48,6 +58,7 @@ export const registerUser = (userData) => dispatch => {
   API().post("https://school-in-cloud-api.herokuapp.com/api/auth/register", userData)
     .then(response => {
       dispatch({ type: REGISTER_SUCCESS, payload: response.data });
+      console.log(response.data);
       dispatch(push("/login"));
     })
     .catch(error =>
