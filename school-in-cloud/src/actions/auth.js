@@ -37,7 +37,7 @@ export function authenticateUser (userData , props) {
         dispatch(push("/student"));
       }
       else {
-        dispatch(push("/volunteer"));
+        dispatch(push("/volunteer/" + response.data.roleId.id));
       }
     })
     .catch(error =>
