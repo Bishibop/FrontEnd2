@@ -53,7 +53,7 @@ function Signup(props) {
   const [formErrors, setFormErrors] = useState();
 
   function handleChange(event) {
-    console.log('Change value: ', event.target.value);
+    //console.log('Change value: ', event.target.value);
     setUser({ ...user, [event.target.name]: event.target.value });
   }
 
@@ -61,7 +61,7 @@ function Signup(props) {
     let updatedUser = user;
     updatedUser.formAvailability[event.target.value] = !user.formAvailability[event.target.value]
     setUser(updatedUser);
-    console.log('Change value: ', event.target.value, user.formAvailability);
+    //console.log('Change value: ', event.target.value, user.formAvailability);
   }
 
   const handleSubmit = event => {
