@@ -22,10 +22,10 @@ function Volunteer(props) {
       setVolunteer(res.data);
     });
     api.get('/api/todos').then(res => {
-      setTodos(res.data.filter(todo => {
-        return todo.volunteer_id === volunteer.volunteer_id;
-      }));
-      //setTodos(res.data);
+      // setTodos(res.data.filter(todo => {
+      //   return todo.volunteer_id === volunteer.volunteer_id;
+      // }));
+      setTodos(res.data);
       console.log('todos: ', res.data);
     });
   }, []);

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CountryDropdown  } from 'react-country-region-selector';
 import { connect } from "react-redux";
+import { TweenMax } from 'gsap';
 import * as yup from 'yup';
 
 import { registerUser } from '../actions/auth'
@@ -41,13 +42,21 @@ function Signup(props) {
     availability: ''
   });
   const [formErrors, setFormErrors] = useState();
+  const volunteerFields = useRef();
+
+  useEffect(() => {
+    //console.log('Change value: ', event.target.value);
+    if (user.role === 'volunteer') {
+      TweenMax.fromTo(volunteerFields.current, 1, {x: -400}, {x: 0});
+      console.log('volunteer fields ref: ', volunteerFields.current);
+    }
+  }, [user]);
 
   function handleChange(event) {
-    //console.log('Change value: ', event.target.value);
     setUser({ ...user, [event.target.name]: event.target.value });
   }
 
-  const handleSubmit = event => {
+  function handleSubmit(event) {
     event.preventDefault();
     signupValidationSchema.validate(user, {abortEarly: false})
       .then(() => {
@@ -127,7 +136,7 @@ function Signup(props) {
           </label>
         </div>
         {(user.role === 'volunteer') &&
-          <>
+          <div ref={volunteerFields}>
             <div>
               <label>
                 Country:
@@ -150,7 +159,7 @@ function Signup(props) {
                 />
               </label>
             </div>
-          </>
+          </div>
         }
         <button>Signup</button>
       </form>

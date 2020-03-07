@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
     "connected-react-router": "^6.7.0",
+    "gsap": "^3.2.4",
     "history": "^4.10.1",
     "react": "^16.13.0",
     "react-country-region-selector": "^1.4.7",
