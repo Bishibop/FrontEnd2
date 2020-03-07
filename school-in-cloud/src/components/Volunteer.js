@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import API from '../utils/API'
 import { Redirect } from "react-router-dom";
 import { hasToken } from "../utils/token";
+import Todos from "./Todos"
 
 const api = API();
 
@@ -42,22 +43,9 @@ function Volunteer(props) {
       <p>Country: {volunteer.country}</p>
       <p>Availability: {volunteer.availability}</p>
       <h3>Your Todos:</h3>
-      <ul>
-        {todos.filter(todo => !todo.is_completed).map(todo => (
-          <li key={todo.id}>
-            {todo.title}: {todo.description}
-          </li>
-        ))}
-      </ul>
+      <Todos things={todos.filter(todo => !todo.is_completed)} />
       <h3>Completed:</h3>
-      <ul>
-        {todos.filter(todo => todo.is_completed).map(todo => (
-          <li key={todo.id}>
-            {todo.title}: {todo.description}
-          </li>
-        ))}
-      </ul>
-
+      <Todos things={todos.filter(todo => todo.is_completed)} />
     </div>
   );
 }

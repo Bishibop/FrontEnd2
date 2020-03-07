@@ -45,10 +45,8 @@ function Signup(props) {
   const volunteerFields = useRef();
 
   useEffect(() => {
-    //console.log('Change value: ', event.target.value);
     if (user.role === 'volunteer') {
       TweenMax.fromTo(volunteerFields.current, 1, {x: -400}, {x: 0});
-      console.log('volunteer fields ref: ', volunteerFields.current);
     }
   }, [user]);
 
@@ -61,11 +59,9 @@ function Signup(props) {
     signupValidationSchema.validate(user, {abortEarly: false})
       .then(() => {
         props.registerUser(user);
-        console.log(user);
       })
       .catch(err => {
         setFormErrors(err.errors);
-        console.log('yup thing: ', err);
       });
   };
   
