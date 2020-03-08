@@ -23,14 +23,11 @@ const signupValidationSchema = yup.object().shape({
       is: 'volunteer',
       then: yup.string().required("Please select a country")
     }),
-  // availability: yup.mixed()
-  //   .when("role", {
-  //     is: 'volunteer',
-  //     then: yup.mixed().test(
-  //       'has-availablity',
-  //       'Please select your availability',
-  //       (value) => Object.values(value).includes(true)
-  //   )})
+  availability: yup.string()
+    .when("role", {
+      is: 'volunteer',
+      then: yup.string().required("Please set your availability")
+    })
 });
 
 function Signup(props) {
@@ -41,39 +38,21 @@ function Signup(props) {
     password: '',
     role: '',
     country: '',
-    formAvailability: {
-      '3': false,
-      '4': false,
-      '5': false,
-      '6': false,
-      '7': false,
-      '8': false
-    },
+    availability: ''
   });
   const [formErrors, setFormErrors] = useState();
 
   function handleChange(event) {
-    console.log('Change value: ', event.target.value);
+    //console.log('Change value: ', event.target.value);
     setUser({ ...user, [event.target.name]: event.target.value });
-  }
-
-  function availabilityChange(event) {
-    let updatedUser = user;
-    updatedUser.formAvailability[event.target.value] = !user.formAvailability[event.target.value]
-    setUser(updatedUser);
-    console.log('Change value: ', event.target.value, user.formAvailability);
   }
 
   const handleSubmit = event => {
     event.preventDefault();
     signupValidationSchema.validate(user, {abortEarly: false})
       .then(() => {
-        let updatedUser = user;
-        updatedUser.availability = Object.keys(user.formAvailability)
-          .filter(key => user.formAvailability[key])
-          .join(',');
-        props.registerUser(updatedUser);
-        console.log(updatedUser);
+        props.registerUser(user);
+        console.log(user);
       })
       .catch(err => {
         setFormErrors(err.errors);
@@ -162,20 +141,13 @@ function Signup(props) {
             </div>
             <div>
               <label>
-                Availability (select all that apply):
-                <br/>
-                {Object.keys(user.formAvailability).map(timeslot => 
-                  <React.Fragment key={timeslot} >
-                    <input
-                      type='checkbox'
-                      name='formAvailability'
-                      onChange={availabilityChange}
-                      value={timeslot}
-                    />
-                    {timeslot}pm
-                    <br/>
-                  </React.Fragment>
-                  )}
+                Enter your availability:
+                <input
+                  type='text'
+                  name='availability'
+                  value={user.availability}
+                  onChange={handleChange}
+                />
               </label>
             </div>
           </>

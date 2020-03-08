@@ -1,42 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import API from '../utils/API'
+import { Redirect } from "react-router-dom";
 import { hasToken } from "../utils/token";
 
 const api = API();
 
 function Volunteer(props) {
-//   if (!hasToken) {
-//     return <Redirect to="/Register" />;
-//   }
   
   const [volunteer, setVolunteer] = useState({
+    volunteer_id: '',
     email: '',
     lastName: '',
     firstName: '',
     country: '',
-    formattedAvailability: ''
+    availability: ''
   });
+  const [todos, setTodos] = useState([]);
 
   useEffect(() => {
     api.get(`/api/volunteer/${props.match.params.id}`).then(res => {
-      let volunteerData = res.data;
-      volunteerData.formattedAvailability = volunteerData.availability
-        .split(',')
-        .map(time => time + 'pm')
-        .join(', ');
-      setVolunteer(volunteerData);
+      setVolunteer(res.data);
     });
-  }, [])
+    api.get('/api/todos').then(res => {
+      setTodos(res.data.filter(todo => {
+        return todo.volunteer_id === volunteer.volunteer_id;
+      }));
+      //setTodos(res.data);
+      console.log('todos: ', res.data);
+    });
+  }, []);
+
+  if (!hasToken) {
+    return <Redirect to="/Register" />;
+  }
 
   return (
-    <>
-      <h2>Volunteer</h2>
+    <div className='volunteer-container'>
+      <h2>Volunteer: {volunteer.firstName} {volunteer.lastName}</h2>
+      <h3>Profile:</h3>
       <p>Email: {volunteer.email}</p>
-      <p>Name: {volunteer.firstName} {volunteer.lastName}</p>
       <p>Country: {volunteer.country}</p>
-      <p>Availability: {volunteer.formattedAvailability}</p>
-    </>
+      <p>Availability: {volunteer.availability}</p>
+      <h3>Your Todos:</h3>
+      <ul>
+        {todos.filter(todo => !todo.is_completed).map(todo => (
+          <li key={todo.id}>
+            {todo.title}: {todo.description}
+          </li>
+        ))}
+      </ul>
+      <h3>Completed:</h3>
+      <ul>
+        {todos.filter(todo => todo.is_completed).map(todo => (
+          <li key={todo.id}>
+            {todo.title}: {todo.description}
+          </li>
+        ))}
+      </ul>
+
+    </div>
   );
 }
 
