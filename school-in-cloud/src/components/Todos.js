@@ -4,11 +4,9 @@ import Todo from "./Todo"
 function Todos({ things }) {
 
   return (
-    <ul>
-      {things.map(todo => (
-        <Todo todo={todo} />
-      ))}
-    </ul>
+    <{'div'}>
+      This is a div
+    </{'div'}>
   );
 }
 

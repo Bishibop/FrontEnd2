@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import { TweenMax } from 'gsap';
 import * as yup from 'yup';
 
-import { registerUser } from '../actions/auth'
-import ErrorMessage from './ErrorMessage';
+import { registerUser } from '../actions/auth';
+import ErrorBlock from './ErrorBlock';
 
 const signupValidationSchema = yup.object().shape({
   firstName: yup.string()
@@ -48,13 +48,15 @@ function Signup(props) {
     if (user.role === 'volunteer') {
       TweenMax.fromTo(volunteerFields.current, 1, {x: -400}, {x: 0});
     }
-  }, [user]);
+  }, [user.role]);
 
   function handleChange(event) {
     setUser({ ...user, [event.target.name]: event.target.value });
   }
 
   function handleSubmit(event) {
+    // event.preventDefault();
+    // props.registerUser(user);
     event.preventDefault();
     signupValidationSchema.validate(user, {abortEarly: false})
       .then(() => {
@@ -69,9 +71,7 @@ function Signup(props) {
   return (
     <div className="signup">
       <h2>Signup page</h2>
-      {formErrors && formErrors.map(err => (
-        <ErrorMessage key={err} message={err}/>
-      ))}
+      <ErrorBlock errors={formErrors} />
       <form onSubmit={handleSubmit}>
         <div>
           <label>
