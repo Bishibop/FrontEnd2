@@ -8,6 +8,7 @@ import Student from "./components/Student";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import AdminVolunteer from "./components/AdminVolunteer";
 
 
 
@@ -24,7 +25,7 @@ const App = () => (
         <Route path="/Register" component={Signup} />
         <PrivateRoute exact path="/admin" component={Admin} />
         <PrivateRoute exact path="/student" component={Student} />
-        <PrivateRoute exact path="/volunteer/:id" component={Volunteer}/>
+        <PrivateRoute exact path="/adminVolunteer/:id" component={AdminVolunteer}/>
         
         
       </Switch>
