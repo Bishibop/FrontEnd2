@@ -42,10 +42,7 @@ function Volunteer(props) {
       <p>Email: {volunteer.email}</p>
       <p>Country: {volunteer.country}</p>
       <p>Availability: {volunteer.availability}</p>
-      <h3>Your Todos:</h3>
-      <Todos things={todos.filter(todo => !todo.is_completed)} />
-      <h3>Completed:</h3>
-      <Todos things={todos.filter(todo => todo.is_completed)} />
+      <Todos things={todos} />
     </div>
   );
 }

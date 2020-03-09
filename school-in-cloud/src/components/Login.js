@@ -23,7 +23,6 @@ function Login(props) {
   const [formErrors, setFormErrors] = useState();  
 
   function handleChange(event) {
-    //console.log('Change value: ', event.target.value);
     setEmailAndPassword({ ...emailAndPassword, [event.target.name]: event.target.value });
   }
 
@@ -35,7 +34,6 @@ function Login(props) {
         props.authenticateUser(emailAndPassword);
     }).catch(err => {
       setFormErrors(err.errors);
-      //console.log('yup errors: ', err);
     });
 
     event.preventDefault();
