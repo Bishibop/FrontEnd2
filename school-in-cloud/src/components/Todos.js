@@ -4,40 +4,33 @@ import Todo from "./Todo"
 function Todos({ things }) {
 
   const [todos, setTodos] = useState(things);
-  const [initialRender, setInitialRender] = useState(true);
 
+  // I need this? What???
   useEffect(() => {
-    if (initialRender) {
-      console.log("setting the initial render");
-      setInitialRender(false);
-    } else {
-      console.log('firing the api request');
-    }
-  }, []);
+    setTodos(things);
+  }, [things]);
 
   return (
     <div className="todos">
       <h3>Your Todos:</h3>
       <ul>
-        {things.filter(todo => !todo.is_completed).map(todo => (
+        {todos.filter(todo => !todo.is_completed).map(todo => (
           <Todo
             key={todo.id}
             todo={todo}
-            todos={things}
+            todos={todos}
             setTodos={setTodos}
-            initialRender={initialRender}
           />
         ))}
       </ul>
       <h3>Completed:</h3>
       <ul>
-        {things.filter(todo => todo.is_completed).map(todo => (
+        {todos.filter(todo => todo.is_completed).map(todo => (
           <Todo
             key={todo.id}
             todo={todo}
-            todos={things}
+            todos={todos}
             setTodos={setTodos}
-            initialRender={initialRender}
           />
         ))}
       </ul>
